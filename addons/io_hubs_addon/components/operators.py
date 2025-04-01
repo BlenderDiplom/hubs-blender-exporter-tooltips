@@ -14,6 +14,7 @@ from ..icons import get_hubs_icons
 from .components_registry import get_component_by_name
 import os
 
+
 class AddHubsComponent(Operator):
     bl_idname = "wm.add_hubs_component"
     bl_label = "Add Hubs Component"
@@ -53,7 +54,7 @@ class AddHubsComponent(Operator):
                             "Cannot add components to linked bones")
                     return False
         return True
-    
+
     @classmethod
     def description(cls, context, properties):
         component = properties.component_name
@@ -63,13 +64,15 @@ class AddHubsComponent(Operator):
                 _, panel_type = item
             tooltip = "Add a hubs component to this object" if panel_type == "object" \
                 else "Add a hubs component to the scene" if panel_type == "scene" \
-                else "Add a hubs component to this bone" 
+                else "Add a hubs component to this bone" if panel_type == "bone" \
+                else "Add a hubs component to this material"
+
             return tooltip
         component_class = get_component_by_name(component)
         print("component:", component)
         print("component_class:", component_class, "type:", type(component_class))
         return component_class.get_tooltip()
-    
+
     def execute(self, context):
         if self.component_name == '':
             return
@@ -200,8 +203,6 @@ class AddHubsComponent(Operator):
                                 op.component_name = component_name
                                 op.panel_type = panel_type
                                 print("no icon:", AddHubsComponent.bl_idname)
-
-
                         added_comps += 1
 
                     # add blank space padding to category so it will take up the same space as the category with the most components in that row (keeps rows aligned)
